@@ -19,7 +19,7 @@ const RecipeIntentHandler = {
     const cocktail = handlerInput.requestEnvelope.request.intent.slots.Cocktail.value
 
     return getRecipe(cocktail).then(function (recipe) {
-      const speechText = `To make a ${cocktail} you will need <emphasis>${recipe}</emphasis>`
+      const speechText = `To make a ${cocktail} you will need to <emphasis>${recipe}</emphasis>`
 
       return handlerInput.responseBuilder
         .speak(speechText)
@@ -28,8 +28,22 @@ const RecipeIntentHandler = {
   }
 }
 
+const ErrorHandler = {
+  canHandle() {
+    return true
+  },
+  handle(handlerInput) {
+    return handlerInput.responseBuilder
+      .speak("Im sorry I don't think I how to make that drink! Can you please repeat it?")
+      .reprompt("I didnt catch that, can you please repeat it?")
+      .withShouldEndSession(fales)
+      .getResponse()
+  }
+}
+
 const builder = Alexa.SkillBuilders.custom()
 
 exports.handler = builder
   .addRequestHandlers(RecipeIntentHandler)
+  .addErrorHandlers(ErrorHandler)
   .lambda()
