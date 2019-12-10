@@ -5,7 +5,7 @@ function getRecipe(cocktail) {
   const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${cocktail}`
 
   return axios.get(url).then(function (response) {
-    return response.data.strInstructions
+    return response.data.drinks[0].strInstructions
   })
 }
 
@@ -19,12 +19,17 @@ const RecipeIntentHandler = {
     const cocktail = handlerInput.requestEnvelope.request.intent.slots.Cocktail.value
 
     return getRecipe(cocktail).then(function (recipe) {
-      const speechText = `To make a ${cocktail} you will need to <emphasis>${recipe}</emphasis>`
+      const speechText = `Sure thing, all you will need to do is ${recipe} <amazon:emotion name="excited" intensity="high"> Enjoy! </amazon:emotion>`
 
-      return handlerInput.responseBuilder.speak(speechText).getReponse()
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .reprompt("Is there anything else I can help make you?")
+        .getResponse()
+
     })
   }
 }
+
 
 const ErrorHandler = {
   canHandle() {
@@ -38,6 +43,7 @@ const ErrorHandler = {
       .getResponse()
   }
 }
+
 
 const builder = Alexa.SkillBuilders.custom()
 
