@@ -21,9 +21,7 @@ const RecipeIntentHandler = {
     return getRecipe(cocktail).then(function (recipe) {
       const speechText = `To make a ${cocktail} you will need to <emphasis>${recipe}</emphasis>`
 
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .getReponse()
+      return handlerInput.responseBuilder.speak(speechText).getReponse()
     })
   }
 }
@@ -34,9 +32,9 @@ const ErrorHandler = {
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder
-      .speak("Im sorry I don't think I how to make that drink! Can you please repeat it?")
+      .speak("Im sorry I don't think I know how to make that drink! Can you please repeat it?")
       .reprompt("I didnt catch that, can you please repeat it?")
-      .withShouldEndSession(fales)
+      .withShouldEndSession(false)
       .getResponse()
   }
 }
